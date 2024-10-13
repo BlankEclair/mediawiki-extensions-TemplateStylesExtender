@@ -2,11 +2,11 @@
 
 namespace MediaWiki\Extension\TemplateStylesExtender\Hooks;
 
-use MediaWiki\Extension\TemplateStyles\Hooks;
 use MediaWiki\Extension\TemplateStylesExtender\TemplateStylesExtender;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
+use ExtensionRegistry;
 use MWException;
 use Parser;
 use PPFrame;
@@ -21,7 +21,9 @@ class MainHooks implements ParserFirstCallInitHook {
 	 * @throws MWException
 	 */
 	public function onParserFirstCallInit( $parser ) {
-		$parser->setHook( 'templatestyles', [ __CLASS__, 'handleTag' ] );
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'TemplateStyles', '>= 1.0' ) ) {
+			$parser->setHook( 'templatestyles', [ __CLASS__, 'handleTag' ] );
+		}
 	}
 
 	/**
@@ -36,10 +38,10 @@ class MainHooks implements ParserFirstCallInitHook {
 	 * @param Parser $parser
 	 * @param PPFrame $frame
 	 * @return string
-	 * @see Hooks::handleTag()
+	 * @see \MediaWiki\Extension\TemplateStyles\Hooks::handleTag()
 	 */
 	public static function handleTag( $text, $params, $parser, $frame ): string {
-		$getOutput = static fn() => Hooks::handleTag( $text, $params, $parser, $frame );
+		$getOutput = static fn() => \MediaWiki\Extension\TemplateStyles\Hooks::handleTag( $text, $params, $parser, $frame );
 
 		if (
 			!isset( $params['wrapclass'] ) ||
@@ -76,7 +78,7 @@ class MainHooks implements ParserFirstCallInitHook {
 			$options->setOption( 'wrapclass', $params['wrapclass'] );
 		}
 
-		$out = Hooks::handleTag( $text, $params, $parser, $frame );
+		$out = $getOutput();
 		$options->setOption( 'wrapclass', $wrapClass );
 
 		return $out;

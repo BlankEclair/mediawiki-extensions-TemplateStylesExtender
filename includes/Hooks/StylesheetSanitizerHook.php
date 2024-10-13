@@ -21,11 +21,11 @@ declare( strict_types=1 );
 
 namespace MediaWiki\Extension\TemplateStylesExtender\Hooks;
 
-use MediaWiki\Extension\TemplateStyles\TemplateStylesMatcherFactory;
 use MediaWiki\Extension\TemplateStylesExtender\FontFaceAtRuleSanitizerExtender;
 use MediaWiki\Extension\TemplateStylesExtender\MatcherFactoryExtender;
 use MediaWiki\Extension\TemplateStylesExtender\StylePropertySanitizerExtender;
 use MediaWiki\Extension\TemplateStylesExtender\TemplateStylesExtender;
+use Wikimedia\CSS\Grammar\MatcherFactory;
 use Wikimedia\CSS\Sanitizer\MediaAtRuleSanitizer;
 use Wikimedia\CSS\Sanitizer\StylePropertySanitizer;
 use Wikimedia\CSS\Sanitizer\StylesheetSanitizer;
@@ -37,7 +37,7 @@ class StylesheetSanitizerHook {
 	 *
 	 * @param StylesheetSanitizer $sanitizer
 	 * @param StylePropertySanitizer $propertySanitizer
-	 * @param TemplateStylesMatcherFactory $matcherFactory
+	 * @param MatcherFactory $matcherFactory
 	 */
 	public static function onSanitize( $sanitizer, $propertySanitizer, $matcherFactory ): void {
 		$newRules = $sanitizer->getRuleSanitizers();
